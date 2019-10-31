@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "test:cov": "nyc --reporter=lcov --reporter=text-summary ava",
+    "test:cov": "nyc --reporter=lcov --reporter=text-summary --check-coverage ava",
     "lint": "size-limit"
   },
   "engines": {
@@ -30,5 +30,11 @@
       "path": "index.js",
       "limit": "538 B"
     }
-  ]
+  ],
+  "nyc": {
+    "branches": 98,
+    "lines": 98,
+    "functions": 98,
+    "statements": 98
+  }
 }
