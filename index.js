@@ -1,20 +1,21 @@
 /**
  * OrderedDict is a data structure that preservers order of inserted keys.
  * And is a sub-class of a regular object/dictionary.
- * Implementation is inspired by python's OrderedDict and this particular gist:
+ * Implementation is inspired by python's `OrderedDict` and this particular gist:
  * https://gist.github.com/joequery/12332f410a05e6c7c949
  */
 function OrderedDict() {
-  this.__root_key = Symbol("rootKey");
+  // Root key
+  this._rk = Symbol("rk");
 
   // Doubly linked list of key-value pairs
-  this.__root = createNode(this.__root_key, undefined);
+  this._r = createNode(this._rk, undefined);
 
   // Circular link for linked list nodes
-  this.__root.prev = this.__root.next = this.__root;
+  this._r.prev = this._r.next = this._r;
 
   // Key -> Link map
-  this.__map = {};
+  this._m = {};
 }
 
 /**
@@ -22,22 +23,22 @@ function OrderedDict() {
  *
  * @param {string|number} key
  * @param {any} value
- * @returns {OrederdDict}
+ * @returns {OrderedDict}
  */
 OrderedDict.prototype.set = function(key, value) {
-  if (!this.__map.hasOwnProperty(key)) {
+  if (!this._m.hasOwnProperty(key)) {
     let node = createNode(key, value);
-    this.__map[key] = node;
+    this._m[key] = node;
 
     // Inserting node at the end of the linked list
-    let root = this.__root;
+    let root = this._r;
     let last = root.prev;
 
     [node.prev, node.next] = [last, root];
     last.next = node;
     root.prev = node;
   } else {
-    this.__map[key].value = value;
+    this._m[key].value = value;
   }
   return this;
 };
@@ -49,12 +50,12 @@ OrderedDict.prototype.set = function(key, value) {
  * @returns {boolean}
  */
 OrderedDict.prototype.delete = function(key) {
-  if (!this.__map.hasOwnProperty(key)) {
+  if (!this._m.hasOwnProperty(key)) {
     return false;
   }
 
   // Removing node from the map and connecting node.prev and node.next
-  let node = this.__map[key];
+  let node = this._m[key];
   let nodePrev = node.prev;
   let nodeNext = node.next;
 
@@ -64,7 +65,7 @@ OrderedDict.prototype.delete = function(key) {
   node.prev = null;
   node.next = null;
 
-  delete this.__map[key];
+  delete this._m[key];
 
   return true;
 };
@@ -75,8 +76,8 @@ OrderedDict.prototype.delete = function(key) {
  * @returns {undefined}
  */
 OrderedDict.prototype.clear = function() {
-  this.__root.prev = this.__root.next = this.__root;
-  this.__map = Object.create(null);
+  this._r.prev = this._r.next = this._r;
+  this._m = Object.create(null);
 };
 
 /**
@@ -86,11 +87,11 @@ OrderedDict.prototype.clear = function() {
  * @returns {any|undefined}
  */
 OrderedDict.prototype.get = function(key) {
-  if (!this.__map.hasOwnProperty(key)) {
+  if (!this._m.hasOwnProperty(key)) {
     return undefined;
   }
 
-  return this.__map[key].value;
+  return this._m[key].value;
 };
 
 /**
@@ -100,7 +101,7 @@ OrderedDict.prototype.get = function(key) {
  * @returns {boolean}
  */
 OrderedDict.prototype.has = function(key) {
-  return this.__map.hasOwnProperty(key);
+  return this._m.hasOwnProperty(key);
 };
 
 /**
@@ -109,18 +110,18 @@ OrderedDict.prototype.has = function(key) {
  * @returns {undefined|any}
  */
 OrderedDict.prototype.pop = function() {
-  let node = this.__root.prev;
+  let node = this._r.prev;
 
-  if (node.key === this.__root_key) {
+  if (node.key === this._rk) {
     return undefined;
   }
 
   let nodePrev = node.prev;
 
-  nodePrev.next = this.__root;
-  this.__root.prev = nodePrev;
+  nodePrev.next = this._r;
+  this._r.prev = nodePrev;
 
-  delete this.__map[node.key];
+  delete this._m[node.key];
 
   return node.value;
 };
@@ -131,18 +132,18 @@ OrderedDict.prototype.pop = function() {
  * @returns {undefined|any}
  */
 OrderedDict.prototype.shift = function() {
-  let node = this.__root.next;
+  let node = this._r.next;
 
-  if (node.key === this.__root_key) {
+  if (node.key === this._rk) {
     return undefined;
   }
 
   let nodeNext = node.next;
 
-  nodeNext.prev = this.__root;
-  this.__root.next = nodeNext;
+  nodeNext.prev = this._r;
+  this._r.next = nodeNext;
 
-  delete this.__map[node.key];
+  delete this._m[node.key];
 
   return node.value;
 };
@@ -154,18 +155,18 @@ OrderedDict.prototype.shift = function() {
  * @returns {boolean}
  */
 OrderedDict.prototype.toStart = function(key) {
-  if (!this.__map.hasOwnProperty(key)) {
+  if (!this._m.hasOwnProperty(key)) {
     return false;
   }
 
-  let node = this.__map[key];
+  let node = this._m[key];
   let nodePrev = node.prev;
   let nodeNext = node.next;
 
   nodePrev.next = nodeNext;
   nodeNext.prev = nodePrev;
 
-  let root = this.__root;
+  let root = this._r;
   let first = root.next;
 
   node.prev = root;
@@ -174,24 +175,24 @@ OrderedDict.prototype.toStart = function(key) {
 };
 
 /**
- * Move an existing element to the end of an orederd dict.
+ * Move an existing element to the end of an ordered dict.
  *
  * @param {string|number} key
  * @returns {boolean}
  */
 OrderedDict.prototype.toEnd = function(key) {
-  if (!this.__map.hasOwnProperty(key)) {
+  if (!this._m.hasOwnProperty(key)) {
     return false;
   }
 
-  let node = this.__map[key];
+  let node = this._m[key];
   let nodePrev = node.prev;
   let nodeNext = node.next;
 
   nodePrev.next = nodeNext;
   nodeNext.prev = nodePrev;
 
-  let root = this.__root;
+  let root = this._r;
   let last = root.prev;
 
   node.prev = last;
@@ -199,26 +200,26 @@ OrderedDict.prototype.toEnd = function(key) {
   last.next = root.prev = node;
 };
 
-OrderedDict.prototype.__iter = function*() {
-  let cur = this.__root.next;
+OrderedDict.prototype._iter = function*() {
+  let cur = this._r.next;
 
-  if (!Object.keys(this.__map).length) {
+  if (!Object.keys(this._m).length) {
     return;
   }
 
-  while (cur.key !== this.__root_key) {
+  while (cur.key !== this._rk) {
     yield cur;
     cur = cur.next;
   }
 };
 
 /**
- * Returns new Iterator obejct that contains all keys of an ordered dict.
+ * Returns new Iterator object that contains all keys of an ordered dict.
  *
  * @returns {Iterator}
  */
 OrderedDict.prototype.keys = function*() {
-  let cur = this.__iter();
+  let cur = this._iter();
 
   while (true) {
     let value = cur.next();
@@ -232,12 +233,12 @@ OrderedDict.prototype.keys = function*() {
 };
 
 /**
- * Returns new Iterator obejct that contains all values of an ordered dict.
+ * Returns new Iterator object that contains all values of an ordered dict.
  *
  * @returns {Iterator}
  */
 OrderedDict.prototype.values = function*() {
-  let cur = this.__iter();
+  let cur = this._iter();
 
   while (true) {
     let value = cur.next();
@@ -251,12 +252,12 @@ OrderedDict.prototype.values = function*() {
 };
 
 /**
- * Returns new Iterator obejct that contains all key-value pairs of an ordered dict.
+ * Returns new Iterator object that contains all key-value pairs of an ordered dict.
  *
  * @returns {Iterator}
  */
 OrderedDict.prototype.entries = function*() {
-  let cur = this.__iter();
+  let cur = this._iter();
 
   while (true) {
     let value = cur.next();
@@ -271,13 +272,13 @@ OrderedDict.prototype.entries = function*() {
 
 OrderedDict.prototype.toString = function() {
   let result = [];
-  let cur = this.__root.next;
+  let cur = this._r.next;
 
-  if (!Object.keys(this.__map).length) {
+  if (!Object.keys(this._m).length) {
     return "$ empty $";
   }
 
-  while (cur.key !== this.__root_key) {
+  while (cur.key !== this._rk) {
     result.push(`(${cur.key}, ${cur.value})`);
     cur = cur.next;
   }

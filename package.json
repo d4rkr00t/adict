@@ -26,6 +26,7 @@
   "devDependencies": {
     "@size-limit/preset-small-lib": "^2.1.6",
     "ava": "^2.4.0",
+    "jsdoc-to-markdown": "^5.0.2",
     "nyc": "^14.1.1"
   },
   "size-limit": [
