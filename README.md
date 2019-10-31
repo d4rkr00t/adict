@@ -4,7 +4,7 @@ TODO: What and why
 
 TODO: small usage example
 
-- Small 529b min and gzip
+- Small 538b min and gzip
 - Zero dependencies
 - O(1) runtime complexity
 
