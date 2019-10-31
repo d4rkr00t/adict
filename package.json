@@ -1,0 +1,34 @@
+{
+  "name": "adict",
+  "version": "0.0.0",
+  "description": "Implementation of an OrderedDict data structure.",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava",
+    "test:cov": "nyc --reporter=lcov --reporter=text-summary ava",
+    "lint": "size-limit"
+  },
+  "engines": {
+    "node": "8"
+  },
+  "keywords": [
+    "ordered map",
+    "ordered dict",
+    "ordered dictionary",
+    "python",
+    "data structure"
+  ],
+  "author": "Stanislav Sysoev <@d4rkr00t>",
+  "license": "MIT",
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^2.1.6",
+    "ava": "^2.4.0",
+    "nyc": "^14.1.1"
+  },
+  "size-limit": [
+    {
+      "path": "index.js",
+      "limit": "529 B"
+    }
+  ]
+}
