@@ -18,6 +18,9 @@
     "python",
     "data structure"
   ],
+  "files": [
+    "index.js"
+  ],
   "author": "Stanislav Sysoev <@d4rkr00t>",
   "license": "MIT",
   "devDependencies": {
