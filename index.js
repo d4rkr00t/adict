@@ -107,7 +107,7 @@ OrderedDict.prototype.has = function(key) {
 /**
  * Remove and return last element from an ordered dict.
  *
- * @returns {undefined|any}
+ * @returns {undefined|[string, any]}
  */
 OrderedDict.prototype.pop = function() {
   let node = this._r.prev;
@@ -123,13 +123,13 @@ OrderedDict.prototype.pop = function() {
 
   delete this._m[node.key];
 
-  return node.value;
+  return [node.key, node.value];
 };
 
 /**
  * Remove and return first element from an ordered dict.
  *
- * @returns {undefined|any}
+ * @returns {undefined|[string, any]}
  */
 OrderedDict.prototype.shift = function() {
   let node = this._r.next;
@@ -145,7 +145,7 @@ OrderedDict.prototype.shift = function() {
 
   delete this._m[node.key];
 
-  return node.value;
+  return [node.key, node.value];
 };
 
 /**
@@ -198,6 +198,28 @@ OrderedDict.prototype.toEnd = function(key) {
   node.prev = last;
   node.next = root;
   last.next = root.prev = node;
+};
+
+/**
+ * Create an ordered dict from an array or object.
+ *
+ * @param {Array<[key, value]>|Object} data
+ * @returns {OrderedDict}
+ */
+OrderedDict.from = function(data) {
+  let dict = new OrderedDict();
+  let dataArray =
+    Object.prototype.toString.call(data) === "[object Object]"
+      ? Object.entries(data)
+      : Array.isArray(data)
+      ? data
+      : [];
+
+  if (dataArray.length) {
+    dataArray.forEach(([key, value]) => dict.set(key, value));
+  }
+
+  return dict;
 };
 
 OrderedDict.prototype._iter = function*() {
@@ -299,6 +321,7 @@ function createNode(key, value) {
 
 /**
  * @typedef {Object} LinkedListNode
+ * @property {string|number} key
  * @property {any} value
  * @property {LinkedListNode|null} prev
  * @property {LinkedListNode|null} next

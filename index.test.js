@@ -127,7 +127,7 @@ test("shift", t => {
   dict.set(2, 20);
   dict.set(3, 30);
 
-  t.is(dict.shift(), 10);
+  t.is(dict.shift().join(", "), "1, 10");
   t.is(dict.toString(), "$ -> (2, 20) -> (3, 30) -> $");
 });
 
@@ -146,7 +146,7 @@ test("pop", t => {
   dict.set(2, 20);
   dict.set(3, 30);
 
-  t.is(dict.pop(), 30);
+  t.is(dict.pop().join(", "), "3, 30");
   t.is(dict.toString(), "$ -> (1, 10) -> (2, 20) -> $");
 });
 
@@ -211,4 +211,30 @@ test("entries", t => {
   dict.set(3, 30);
 
   t.is(Array.from(dict.entries()).join(", "), "1,10, 2,20, 3,30");
+});
+
+/**
+ * OrderedDict#from
+ */
+
+test("from array", t => {
+  let dict = OrderedDict.from([[1, 10], [2, 20], [3, 30]]);
+
+  t.is(dict.toString(), "$ -> (1, 10) -> (2, 20) -> (3, 30) -> $");
+});
+
+test("from object", t => {
+  let dict = OrderedDict.from({
+    1: 10,
+    2: 20,
+    3: 30
+  });
+
+  t.is(dict.toString(), "$ -> (1, 10) -> (2, 20) -> (3, 30) -> $");
+});
+
+test("from unkown data", t => {
+  let dict = OrderedDict.from(123);
+
+  t.is(dict.toString(), "$ empty $");
 });
