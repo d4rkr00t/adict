@@ -32,7 +32,7 @@
   "size-limit": [
     {
       "path": "index.js",
-      "limit": "603 B"
+      "limit": "593 B"
     }
   ],
   "nyc": {

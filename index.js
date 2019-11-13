@@ -26,20 +26,22 @@ function OrderedDict() {
  * @returns {OrderedDict}
  */
 OrderedDict.prototype.set = function(key, value) {
-  if (!this._m.has(key)) {
-    let node = createNode(key, value);
-    this._m.set(key, node);
-
-    // Inserting node at the end of the linked list
-    let root = this._r;
-    let last = root.prev;
-
-    [node.prev, node.next] = [last, root];
-    last.next = node;
-    root.prev = node;
-  } else {
+  if (this._m.has(key)) {
     this._m.get(key).value = value;
+    return this;
   }
+
+  let node = createNode(key, value);
+  this._m.set(key, node);
+
+  // Inserting node at the end of the linked list
+  let root = this._r;
+  let last = root.prev;
+
+  [node.prev, node.next] = [last, root];
+  last.next = node;
+  root.prev = node;
+
   return this;
 };
 
@@ -222,7 +224,7 @@ OrderedDict.from = function(data) {
   return dict;
 };
 
-OrderedDict.prototype._iter = function*() {
+OrderedDict.prototype._i = function*() {
   let cur = this._r.next;
 
   if (!this._m.size) {
@@ -241,16 +243,16 @@ OrderedDict.prototype._iter = function*() {
  * @returns {Iterator}
  */
 OrderedDict.prototype.keys = function*() {
-  let cur = this._iter();
+  let cur = this._i();
 
   while (true) {
     let value = cur.next();
 
-    if (!value.done) {
-      yield value.value.key;
-    } else {
+    if (value.done) {
       return;
     }
+
+    yield value.value.key;
   }
 };
 
@@ -260,16 +262,16 @@ OrderedDict.prototype.keys = function*() {
  * @returns {Iterator}
  */
 OrderedDict.prototype.values = function*() {
-  let cur = this._iter();
+  let cur = this._i();
 
   while (true) {
     let value = cur.next();
 
-    if (!value.done) {
-      yield value.value.value;
-    } else {
+    if (value.done) {
       return;
     }
+
+    yield value.value.value;
   }
 };
 
@@ -279,16 +281,16 @@ OrderedDict.prototype.values = function*() {
  * @returns {Iterator}
  */
 OrderedDict.prototype.entries = function*() {
-  let cur = this._iter();
+  let cur = this._i();
 
   while (true) {
     let value = cur.next();
 
-    if (!value.done) {
-      yield [value.value.key, value.value.value];
-    } else {
+    if (value.done) {
       return;
     }
+
+    yield [value.value.key, value.value.value];
   }
 };
 
@@ -322,7 +324,7 @@ function createNode(key, value) {
 /**
  * @typedef {Object} LinkedListNode
  * @property {OrderedDictKey} key
- * @property {any} value
+ * @property {OrderedDictValue} value
  * @property {LinkedListNode|null} prev
  * @property {LinkedListNode|null} next
  */
