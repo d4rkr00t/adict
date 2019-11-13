@@ -15,20 +15,20 @@ function OrderedDict() {
   this._r.prev = this._r.next = this._r;
 
   // Key -> Link map
-  this._m = {};
+  this._m = new Map();
 }
 
 /**
  * Add a new key-value pair to an ordered dict.
  *
- * @param {string|number} key
+ * @param {OrderedDictKey} key
  * @param {any} value
  * @returns {OrderedDict}
  */
 OrderedDict.prototype.set = function(key, value) {
-  if (!this._m.hasOwnProperty(key)) {
+  if (!this._m.has(key)) {
     let node = createNode(key, value);
-    this._m[key] = node;
+    this._m.set(key, node);
 
     // Inserting node at the end of the linked list
     let root = this._r;
@@ -38,7 +38,7 @@ OrderedDict.prototype.set = function(key, value) {
     last.next = node;
     root.prev = node;
   } else {
-    this._m[key].value = value;
+    this._m.get(key).value = value;
   }
   return this;
 };
@@ -46,16 +46,16 @@ OrderedDict.prototype.set = function(key, value) {
 /**
  * Delete a key from an ordered dict.
  *
- * @param {string|number} key
+ * @param {OrderedDictKey} key
  * @returns {boolean}
  */
 OrderedDict.prototype.delete = function(key) {
-  if (!this._m.hasOwnProperty(key)) {
+  if (!this._m.has(key)) {
     return false;
   }
 
   // Removing node from the map and connecting node.prev and node.next
-  let node = this._m[key];
+  let node = this._m.get(key);
   let nodePrev = node.prev;
   let nodeNext = node.next;
 
@@ -65,7 +65,7 @@ OrderedDict.prototype.delete = function(key) {
   node.prev = null;
   node.next = null;
 
-  delete this._m[key];
+  this._m.delete(key);
 
   return true;
 };
@@ -77,43 +77,43 @@ OrderedDict.prototype.delete = function(key) {
  */
 OrderedDict.prototype.clear = function() {
   this._r.prev = this._r.next = this._r;
-  this._m = Object.create(null);
+  this._m = new Map();
 };
 
 /**
  * Retrieve a key from an ordered dict.
  *
- * @param {string|number} key
- * @returns {any|undefined}
+ * @param {OrderedDictKey} key
+ * @returns {OrderedDictValue|undefined}
  */
 OrderedDict.prototype.get = function(key) {
-  if (!this._m.hasOwnProperty(key)) {
-    return undefined;
+  if (!this._m.has(key)) {
+    return;
   }
 
-  return this._m[key].value;
+  return this._m.get(key).value;
 };
 
 /**
  * Check if key exists in an ordered dict.
  *
- * @param {string|number} key
+ * @param {OrderedDictKey} key
  * @returns {boolean}
  */
 OrderedDict.prototype.has = function(key) {
-  return this._m.hasOwnProperty(key);
+  return this._m.has(key);
 };
 
 /**
  * Remove and return last element from an ordered dict.
  *
- * @returns {undefined|[string, any]}
+ * @returns {undefined|[OrderedDictKey, OrderedDictValue]}
  */
 OrderedDict.prototype.pop = function() {
   let node = this._r.prev;
 
   if (node.key === this._rk) {
-    return undefined;
+    return;
   }
 
   let nodePrev = node.prev;
@@ -121,7 +121,7 @@ OrderedDict.prototype.pop = function() {
   nodePrev.next = this._r;
   this._r.prev = nodePrev;
 
-  delete this._m[node.key];
+  this._m.delete(node.key);
 
   return [node.key, node.value];
 };
@@ -129,13 +129,13 @@ OrderedDict.prototype.pop = function() {
 /**
  * Remove and return first element from an ordered dict.
  *
- * @returns {undefined|[string, any]}
+ * @returns {undefined|[OrderedDictKey, OrderedDictValue]}
  */
 OrderedDict.prototype.shift = function() {
   let node = this._r.next;
 
   if (node.key === this._rk) {
-    return undefined;
+    return;
   }
 
   let nodeNext = node.next;
@@ -143,7 +143,7 @@ OrderedDict.prototype.shift = function() {
   nodeNext.prev = this._r;
   this._r.next = nodeNext;
 
-  delete this._m[node.key];
+  this._m.delete(node.key);
 
   return [node.key, node.value];
 };
@@ -151,15 +151,15 @@ OrderedDict.prototype.shift = function() {
 /**
  * Move an existing element to the start of an orederd dict.
  *
- * @param {string|number} key
+ * @param {OrderedDictKey} key
  * @returns {boolean}
  */
 OrderedDict.prototype.toStart = function(key) {
-  if (!this._m.hasOwnProperty(key)) {
+  if (!this._m.has(key)) {
     return false;
   }
 
-  let node = this._m[key];
+  let node = this._m.get(key);
   let nodePrev = node.prev;
   let nodeNext = node.next;
 
@@ -177,15 +177,15 @@ OrderedDict.prototype.toStart = function(key) {
 /**
  * Move an existing element to the end of an ordered dict.
  *
- * @param {string|number} key
+ * @param {OrderedDictKey} key
  * @returns {boolean}
  */
 OrderedDict.prototype.toEnd = function(key) {
-  if (!this._m.hasOwnProperty(key)) {
+  if (!this._m.has(key)) {
     return false;
   }
 
-  let node = this._m[key];
+  let node = this._m.get(key);
   let nodePrev = node.prev;
   let nodeNext = node.next;
 
@@ -203,7 +203,7 @@ OrderedDict.prototype.toEnd = function(key) {
 /**
  * Create an ordered dict from an array or object.
  *
- * @param {Array<[key, value]>|Object} data
+ * @param {Array<[OrderedDictKey, OrderedDictValue]>|Object} data
  * @returns {OrderedDict}
  */
 OrderedDict.from = function(data) {
@@ -225,7 +225,7 @@ OrderedDict.from = function(data) {
 OrderedDict.prototype._iter = function*() {
   let cur = this._r.next;
 
-  if (!Object.keys(this._m).length) {
+  if (!this._m.size) {
     return;
   }
 
@@ -296,7 +296,7 @@ OrderedDict.prototype.toString = function() {
   let result = [];
   let cur = this._r.next;
 
-  if (!Object.keys(this._m).length) {
+  if (!this._m.size) {
     return "$ empty $";
   }
 
@@ -311,8 +311,8 @@ OrderedDict.prototype.toString = function() {
 /**
  * Creates Linked List Node
  *
- * @param {string} key
- * @param {any} value
+ * @param {OrderedDictKey} key
+ * @param {OrderedDictValue} value
  * @returns {LinkedListNode}
  */
 function createNode(key, value) {
@@ -321,10 +321,18 @@ function createNode(key, value) {
 
 /**
  * @typedef {Object} LinkedListNode
- * @property {string|number} key
+ * @property {OrderedDictKey} key
  * @property {any} value
  * @property {LinkedListNode|null} prev
  * @property {LinkedListNode|null} next
+ */
+
+/**
+ * @typedef {any} OrderedDictKey
+ */
+
+/**
+ * @typedef {any} OrderedDictValue
  */
 
 module.exports = OrderedDict;
