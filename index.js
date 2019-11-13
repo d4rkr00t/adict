@@ -109,7 +109,7 @@ OrderedDict.prototype.has = function(key) {
 /**
  * Remove and return last element from an ordered dict.
  *
- * @returns {undefined|[OrderedDictKey, OrderedDictValue]}
+ * @returns {undefined|OrderedDictKeyValue}
  */
 OrderedDict.prototype.pop = function() {
   let node = this._r.prev;
@@ -131,7 +131,7 @@ OrderedDict.prototype.pop = function() {
 /**
  * Remove and return first element from an ordered dict.
  *
- * @returns {undefined|[OrderedDictKey, OrderedDictValue]}
+ * @returns {undefined|OrderedDictKeyValue}
  */
 OrderedDict.prototype.shift = function() {
   let node = this._r.next;
@@ -205,7 +205,7 @@ OrderedDict.prototype.toEnd = function(key) {
 /**
  * Create an ordered dict from an array or object.
  *
- * @param {Array<[OrderedDictKey, OrderedDictValue]>|Object} data
+ * @param {Array<OrderedDictKeyValue>|Object} data
  * @returns {OrderedDict}
  */
 OrderedDict.from = function(data) {
@@ -313,6 +313,7 @@ OrderedDict.prototype.toString = function() {
 /**
  * Creates Linked List Node
  *
+ * @private
  * @param {OrderedDictKey} key
  * @param {OrderedDictValue} value
  * @returns {LinkedListNode}
@@ -322,6 +323,7 @@ function createNode(key, value) {
 }
 
 /**
+ * @private
  * @typedef {Object} LinkedListNode
  * @property {OrderedDictKey} key
  * @property {OrderedDictValue} value
@@ -335,6 +337,10 @@ function createNode(key, value) {
 
 /**
  * @typedef {any} OrderedDictValue
+ */
+
+/**
+ * @typedef {Array<OrderedDictKey, OrderedDictValue>} OrderedDictKeyValue
  */
 
 module.exports = OrderedDict;

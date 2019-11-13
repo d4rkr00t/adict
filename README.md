@@ -14,40 +14,42 @@ let dict = new OrderedDict();
 dict.set(1, 2);
 ```
 
-- Small 538b min and gzip
+- Small 593b min and gzip
 - Zero dependencies
 - O(1) runtime complexity for all operations
 
 ## API
 
-<a name="OrderedDict"></a>
-
-### OrderedDict
+### OrderedDict()
 
 OrderedDict is a data structure that preservers order of inserted keys.
 And is a sub-class of a regular object/dictionary.
-Implementation is inspired by python's OrderedDict and this particular gist:
+Implementation is inspired by python's `OrderedDict` and this particular gist:
 https://gist.github.com/joequery/12332f410a05e6c7c949
 
-**Kind**: class
+<details>
+  <summary>Click to expand!</summary>
 
-```js
-let dict = new OrderedDict();
-```
+<p></p>
+
+**Kind**: Class
 
 - [OrderedDict()](#OrderedDict)
-  - [.set(key, value)](#OrderedDict+set) ⇒ <code>OrderedDict</code>
-  - [.delete(key)](#OrderedDict+delete) ⇒ <code>boolean</code>
-  - [.clear()](#OrderedDict+clear) ⇒ <code>undefined</code>
-  - [.get(key)](#OrderedDict+get) ⇒ <code>any</code> \| <code>undefined</code>
-  - [.has(key)](#OrderedDict+has) ⇒ <code>boolean</code>
-  - [.pop()](#OrderedDict+pop) ⇒ <code>undefined</code> \| <code>any</code>
-  - [.shift()](#OrderedDict+shift) ⇒ <code>undefined</code> \| <code>any</code>
-  - [.toStart(key)](#OrderedDict+toStart) ⇒ <code>boolean</code>
-  - [.toEnd(key)](#OrderedDict+toEnd) ⇒ <code>boolean</code>
-  - [.keys()](#OrderedDict+keys) ⇒ <code>Iterator</code>
-  - [.values()](#OrderedDict+values) ⇒ <code>Iterator</code>
-  - [.entries()](#OrderedDict+entries) ⇒ <code>Iterator</code>
+  - _instance_
+    - [.set(key, value)](#OrderedDict+set) ⇒ [<code>OrderedDict</code>](#OrderedDict)
+    - [.delete(key)](#OrderedDict+delete) ⇒ <code>boolean</code>
+    - [.clear()](#OrderedDict+clear) ⇒ <code>undefined</code>
+    - [.get(key)](#OrderedDict+get) ⇒ [<code>OrderedDictValue</code>](#OrderedDictValue) \| <code>undefined</code>
+    - [.has(key)](#OrderedDict+has) ⇒ <code>boolean</code>
+    - [.pop()](#OrderedDict+pop) ⇒ <code>undefined</code> \| [<code>OrderedDictKeyValue</code>](#OrderedDictKeyValue)
+    - [.shift()](#OrderedDict+shift) ⇒ <code>undefined</code> \| [<code>OrderedDictKeyValue</code>](#OrderedDictKeyValue)
+    - [.toStart(key)](#OrderedDict+toStart) ⇒ <code>boolean</code>
+    - [.toEnd(key)](#OrderedDict+toEnd) ⇒ <code>boolean</code>
+    - [.keys()](#OrderedDict+keys) ⇒ <code>Iterator</code>
+    - [.values()](#OrderedDict+values) ⇒ <code>Iterator</code>
+    - [.entries()](#OrderedDict+entries) ⇒ <code>Iterator</code>
+  - _static_
+    - [.from(data)](#OrderedDict.from) ⇒ [<code>OrderedDict</code>](#OrderedDict)
 
 <a name="OrderedDict+set"></a>
 
@@ -57,10 +59,10 @@ Add a new key-value pair to an ordered dict.
 
 **Kind**: instance method of [<code>OrderedDict</code>](#OrderedDict)
 
-| Param | Type                                       |
-| ----- | ------------------------------------------ |
-| key   | <code>string</code> \| <code>number</code> |
-| value | <code>any</code>                           |
+| Param | Type                                           |
+| ----- | ---------------------------------------------- |
+| key   | [<code>OrderedDictKey</code>](#OrderedDictKey) |
+| value | <code>any</code>                               |
 
 <a name="OrderedDict+delete"></a>
 
@@ -70,9 +72,9 @@ Delete a key from an ordered dict.
 
 **Kind**: instance method of [<code>OrderedDict</code>](#OrderedDict)
 
-| Param | Type                                       |
-| ----- | ------------------------------------------ |
-| key   | <code>string</code> \| <code>number</code> |
+| Param | Type                                           |
+| ----- | ---------------------------------------------- |
+| key   | [<code>OrderedDictKey</code>](#OrderedDictKey) |
 
 <a name="OrderedDict+clear"></a>
 
@@ -83,15 +85,15 @@ Clear ordered dict.
 **Kind**: instance method of [<code>OrderedDict</code>](#OrderedDict)
 <a name="OrderedDict+get"></a>
 
-#### orderedDict.get(key) ⇒ <code>any</code> \| <code>undefined</code>
+#### orderedDict.get(key) ⇒ [<code>OrderedDictValue</code>](#OrderedDictValue) \| <code>undefined</code>
 
 Retrieve a key from an ordered dict.
 
 **Kind**: instance method of [<code>OrderedDict</code>](#OrderedDict)
 
-| Param | Type                                       |
-| ----- | ------------------------------------------ |
-| key   | <code>string</code> \| <code>number</code> |
+| Param | Type                                           |
+| ----- | ---------------------------------------------- |
+| key   | [<code>OrderedDictKey</code>](#OrderedDictKey) |
 
 <a name="OrderedDict+has"></a>
 
@@ -101,20 +103,20 @@ Check if key exists in an ordered dict.
 
 **Kind**: instance method of [<code>OrderedDict</code>](#OrderedDict)
 
-| Param | Type                                       |
-| ----- | ------------------------------------------ |
-| key   | <code>string</code> \| <code>number</code> |
+| Param | Type                                           |
+| ----- | ---------------------------------------------- |
+| key   | [<code>OrderedDictKey</code>](#OrderedDictKey) |
 
 <a name="OrderedDict+pop"></a>
 
-#### orderedDict.pop() ⇒ <code>undefined</code> \| <code>any</code>
+#### orderedDict.pop() ⇒ <code>undefined</code> \| [<code>OrderedDictKeyValue</code>](#OrderedDictKeyValue)
 
 Remove and return last element from an ordered dict.
 
 **Kind**: instance method of [<code>OrderedDict</code>](#OrderedDict)
 <a name="OrderedDict+shift"></a>
 
-#### orderedDict.shift() ⇒ <code>undefined</code> \| <code>any</code>
+#### orderedDict.shift() ⇒ <code>undefined</code> \| [<code>OrderedDictKeyValue</code>](#OrderedDictKeyValue)
 
 Remove and return first element from an ordered dict.
 
@@ -123,13 +125,13 @@ Remove and return first element from an ordered dict.
 
 #### orderedDict.toStart(key) ⇒ <code>boolean</code>
 
-Move an existing element to the start of an ordered dict.
+Move an existing element to the start of an orederd dict.
 
 **Kind**: instance method of [<code>OrderedDict</code>](#OrderedDict)
 
-| Param | Type                                       |
-| ----- | ------------------------------------------ |
-| key   | <code>string</code> \| <code>number</code> |
+| Param | Type                                           |
+| ----- | ---------------------------------------------- |
+| key   | [<code>OrderedDictKey</code>](#OrderedDictKey) |
 
 <a name="OrderedDict+toEnd"></a>
 
@@ -139,9 +141,9 @@ Move an existing element to the end of an ordered dict.
 
 **Kind**: instance method of [<code>OrderedDict</code>](#OrderedDict)
 
-| Param | Type                                       |
-| ----- | ------------------------------------------ |
-| key   | <code>string</code> \| <code>number</code> |
+| Param | Type                                           |
+| ----- | ---------------------------------------------- |
+| key   | [<code>OrderedDictKey</code>](#OrderedDictKey) |
 
 <a name="OrderedDict+keys"></a>
 
@@ -164,16 +166,30 @@ Returns new Iterator object that contains all values of an ordered dict.
 Returns new Iterator object that contains all key-value pairs of an ordered dict.
 
 **Kind**: instance method of [<code>OrderedDict</code>](#OrderedDict)
+<a name="OrderedDict.from"></a>
 
-<a name="LinkedListNode"></a>
+#### OrderedDict.from(data) ⇒ [<code>OrderedDict</code>](#OrderedDict)
 
-### [private] LinkedListNode : <code>Object</code>
+Create an ordered dict from an array or object.
 
-**Kind**: global typedef
-**Properties**
+**Kind**: static method of [<code>OrderedDict</code>](#OrderedDict)
 
-| Name  | Type                                                                |
-| ----- | ------------------------------------------------------------------- |
-| value | <code>any</code>                                                    |
-| prev  | [<code>LinkedListNode</code>](#LinkedListNode) \| <code>null</code> |
-| next  | [<code>LinkedListNode</code>](#LinkedListNode) \| <code>null</code> |
+| Param | Type                                                                                         |
+| ----- | -------------------------------------------------------------------------------------------- |
+| data  | [<code>Array&lt;OrderedDictKeyValue&gt;</code>](#OrderedDictKeyValue) \| <code>Object</code> |
+
+---
+
+<a name="OrderedDictKey"></a>
+
+#### OrderedDictKey : <code>any</code>
+
+<a name="OrderedDictValue"></a>
+
+#### OrderedDictValue : <code>any</code>
+
+<a name="OrderedDictKeyValue"></a>
+
+#### OrderedDictKeyValue : <code>[OrderedDictKey, OrderedDictValue]</code>
+
+</details>
